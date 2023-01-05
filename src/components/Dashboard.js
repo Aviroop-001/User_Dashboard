@@ -6,6 +6,7 @@ function Dashboard() {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetchData();
+    // fetchImages();
     console.log("Data Reloaded");
   }, []);
 
@@ -17,6 +18,15 @@ function Dashboard() {
         console.log(err);
       });
   };
+
+//   const fetchImages=async () =>{
+//     await fetch("https://randomuser.me/api/?results=500")
+//       .then((res) => res.json())
+//       .then((data) => setimages(data))
+//       .catch((err) => {
+//         console.log(err);
+//       });
+// }
 
   const userAddHandler = async (name, email) => {
     await fetch("https://jsonplaceholder.typicode.com/users", {

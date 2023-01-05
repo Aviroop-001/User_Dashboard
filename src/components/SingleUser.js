@@ -1,6 +1,7 @@
 import React from "react";
 import { roles } from "./randomData";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { images } from "./randomData";
 
 function SingleUser({ user, userDeleteHandler }) {
   const months = [
@@ -34,6 +35,11 @@ function SingleUser({ user, userDeleteHandler }) {
     st += d.getFullYear().toString();
     return st;
   }
+
+  function getRandomInt() {
+    return Math.floor(Math.random() * (10000 - 5)) + 4;
+  }
+
   const handleDelete = (e, id) => {
     e.preventDefault();
     userDeleteHandler(id);
@@ -45,7 +51,7 @@ function SingleUser({ user, userDeleteHandler }) {
         <div className="flex">
           <div>
             <img
-              src={user.picture}
+              src={images[Math.floor((Math.random() * 1000) % 21)]}
               alt=""
               className="mr-3 w-8 sm:w-12 h-8 sm:h-12 rounded-full"
             />
