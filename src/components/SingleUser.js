@@ -1,49 +1,8 @@
 import React from "react";
-import { roles } from "./randomData";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { images } from "./randomData";
+import { images, roles, randomDate, randomDateTime } from "./randomData";
 
 function SingleUser({ user, userDeleteHandler }) {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  function randomDateTime(start, end) {
-    const d = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    return d.toLocaleTimeString();
-  }
-  function randomDate(start, end) {
-    const d = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    let st = "";
-    st += months[d.getMonth()] + " ";
-    st += d.getDate().toString() + ",";
-    st += d.getFullYear().toString();
-    return st;
-  }
-
-  function getRandomInt() {
-    return Math.floor(Math.random() * (10000 - 5)) + 4;
-  }
-
-  const handleDelete = (e, id) => {
-    e.preventDefault();
-    userDeleteHandler(id);
-  };
 
   return (
     <tr key={user.name}>

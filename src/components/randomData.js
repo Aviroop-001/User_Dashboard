@@ -23,9 +23,38 @@ const images= [
     "https://images.unsplash.com/photo-1490195117352-aa267f47f2d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mjl8fHJhbmRvbSUyMHBlb3BsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=1000&q=60",
 ]
 
-
-const status = [ "Active", "Invited" ]
-
 const roles = ["Admin", "Sales Leader", "Backend Developer", "Frontend Developer", "Dev OPs", "Recruiter", "Sales Rep", "Product Manager"]
 
-export {images, status, roles}
+const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  function randomDateTime(start, end) {
+    const d = new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    );
+    return d.toLocaleTimeString();
+  }
+  function randomDate(start, end) {
+    const d = new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    );
+    let st = "";
+    st += months[d.getMonth()] + " ";
+    st += d.getDate().toString() + ",";
+    st += d.getFullYear().toString();
+    return st;
+  }
+
+export {images, roles, randomDate, randomDateTime}

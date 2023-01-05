@@ -10,8 +10,24 @@ import {
   PopoverCloseButton,
   PopoverAnchor, useDisclosure
 } from '@chakra-ui/react'
+import { CSVLink } from "react-csv";
+import { roles, randomDate } from "./randomData";
 
 function DashboardHeader({users, userAddHandler }) {
+
+  const headers=[
+    { label: "Name", key: "name" },
+    { label: "Username", key: "username" },
+    { label: "Email", key: "email" },
+    { label: "Phone", key: "phone" },
+    { label: "Last login", key: "login" },
+    { label: "Role", key: "role" },
+    { label: "City", key: "city" },
+  ];
+  const data=[];
+  users.forEach(user => {
+    data.push({ name: user.name, username: user.username, email: user.email, phone: user.phone, login: randomDate(new Date(2022, 6, 5), new Date()), role: roles[Math.floor((Math.random() * 1000) % 8)], city: user.address.city })
+  });
 
   const submitHandler= (e) =>{
     e.preventDefault();
@@ -29,7 +45,11 @@ function DashboardHeader({users, userAddHandler }) {
           <div>Manage your team members and account permissions</div>
         </div>
         <div className=" w-1/4 flex justify-between">
-          <button className="rounded-full bg-sky-500 px-4">Download CSV</button>
+          <button className="rounded-full bg-sky-500 px-4">
+            <CSVLink data={data} headers={headers}>
+              Download CSV
+            </CSVLink>
+          </button>
           <Popover>
   <PopoverTrigger>
     <button className="rounded-full bg-teal-500 px-8">Add User</button>
