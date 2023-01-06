@@ -1,98 +1,74 @@
 import React, { useState, useEffect } from "react";
 import DashboardHeader from "./DashboardHeader";
 import UsersDisplay from "./UsersDisplay";
+import Axios from 'axios'
+import { currentDate, currentDateTime } from "./randomData";
 
 function Dashboard() {
   const [users, setUsers] = useState([]);
+
   useEffect(() => {
     fetchData();
-    // fetchImages();
     console.log("Data Reloaded");
   }, []);
 
-  const fetchData = async () => {
-    await fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-//   const fetchImages=async () =>{
-//     await fetch("https://randomuser.me/api/?results=500")
-//       .then((res) => res.json())
-//       .then((data) => setimages(data))
-//       .catch((err) => {
-//         console.log(err);
-//       });
-// }
-
-  const userAddHandler = async (name, email) => {
-    await fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
-      body: JSON.stringify({
-        name: name,
-        email: email,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((res) => {
-        if (res.status !== 201) {
-          return;
-        } else {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        setUsers((users) => [...users, data]);
+  const fetchData = async () =>{
+      await Axios.get("https://fake-api-51ea.onrender.com/users")
+      .then( res =>{
+        setUsers(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
+      console.log("users fetched");
+  }
+
+  const userAddHandler = async (name, email, role, status, phone) => {
+    const newUser = {
+      name: name,
+      email: email,
+      role: role,
+      status: status,
+      phone: phone,
+      image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      login: {date: currentDate(), time: currentDateTime()}
+    };
+    try {
+      const res = await Axios.post("https://fake-api-51ea.onrender.com/users", newUser);
+      console.log("User Added");
+      fetchData();
+    } catch (er) {
+      console.log(er);
+    }
   };
 
   const userDeleteHandler = async (id) => {
-    await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res.status !== 200) {
-          return;
-        } else {
-          setUsers(
-            users.filter((user) => {
-              return user.id !== id;
-            })
-          );
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const res = await Axios.delete(`https://fake-api-51ea.onrender.com/users/${id}`)
+    try {
+      alert("User deleted")
+      console.log("User deleted");
+      fetchData();
+    } catch (error) {
+      console.log(error)
+    }
   };
 
-  const userUpdateHandler = async(id, name, email) => {
-    await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-  method: 'PUT',
-  body: JSON.stringify({
-    name: name,
-    email:email
-  }),
-  headers: {
-    'Content-type': 'application/json; charset=UTF-8',
-  },
-})
-  .then((response) => response.json())
-  // .then((json) => console.log(json));
+  const userUpdateHandler = async(id, nm, rl) => {
+    const update = {name: nm, role: rl}
+    const res = await Axios.patch(`https://fake-api-51ea.onrender.com/users/${id}`, update);
+    try {
+      alert("User edited")
+      console.log("User deleted");
+      fetchData();
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
-    <div>
+    <div style={{height:'100vh'}}>
       <DashboardHeader users={users} userAddHandler={userAddHandler}/>
-      <UsersDisplay users={users} userDeleteHandler={userDeleteHandler}/>
+      <UsersDisplay users={users} userDeleteHandler={userDeleteHandler} userUpdateHandler={userUpdateHandler}/>
     </div>
   );
 }

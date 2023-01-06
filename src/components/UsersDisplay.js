@@ -4,7 +4,7 @@ import Pagination from "./Pagination"
 import Users from "./Users";
 
 
-function UsersDisplay({ users,userDeleteHandler }) {
+function UsersDisplay({ users,userDeleteHandler, userUpdateHandler }) {
    
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(4);
@@ -59,7 +59,7 @@ function UsersDisplay({ users,userDeleteHandler }) {
                       ></th>
                     </tr>
                   </thead>
-                  <Users currentUsers={currentUsers} userDeleteHandler={userDeleteHandler} />
+                  <Users currentUsers={currentUsers} userUpdateHandler={userUpdateHandler} userDeleteHandler={userDeleteHandler} />
                 </table>
                 <Pagination
         usersPerPage={usersPerPage}
