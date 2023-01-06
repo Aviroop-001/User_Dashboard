@@ -6,18 +6,16 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
-  useDisclosure,
 } from "@chakra-ui/react";
 
-function SingleUser({ user, userUpdateHandler, userDeleteHandler }) {
+function SingleUser({ user, updateUserMutation, deleteUserMutation }) {
 
   const submitHandler= (e) =>{
     e.preventDefault();
-    userUpdateHandler(user.id, e.target.name.value, e.target.role.value);
+    const update = {id: user.id, name: e.target.name.value, role: e.target.role.value}
+    updateUserMutation.mutate(update);
     e.target.name.value = "";
     e.target.role.value = "";
   }
@@ -77,7 +75,7 @@ function SingleUser({ user, userUpdateHandler, userDeleteHandler }) {
       </td>
       <td className="px-6 py-1 text-sm font-medium text-right whitespace-nowrap">
         <a className="hover:text-green-700 text-xl" href="#">
-          <button onClick={() => userDeleteHandler(user.id)}>
+          <button onClick={() => deleteUserMutation.mutate(user.id)}>
             <AiOutlineDelete />
           </button>
         </a>

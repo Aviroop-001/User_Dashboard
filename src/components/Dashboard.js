@@ -1,74 +1,61 @@
 import React, { useState, useEffect } from "react";
 import DashboardHeader from "./DashboardHeader";
 import UsersDisplay from "./UsersDisplay";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from 'react-query';
 import Axios from 'axios'
-import { currentDate, currentDateTime } from "./randomData";
+import {fetchData, userAddHandler, userDeleteHandler, userUpdateHandler, fetchSortedData, sortArrayOfObjects } from '../functions'
 
 function Dashboard() {
-  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-    console.log("Data Reloaded");
-  }, []);
+  const [sort, setsort] = useState(false);
+  
+  const queryClient = useQueryClient();
 
-  const fetchData = async () =>{
-      await Axios.get("https://fake-api-51ea.onrender.com/users")
-      .then( res =>{
-        setUsers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-      console.log("users fetched");
+  const {data:users, isLoading, isError, error } = useQuery('users',fetchData)
+
+  const addUserMutation = useMutation(userAddHandler, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users')
+    }
+  })
+
+  const deleteUserMutation = useMutation(userDeleteHandler, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users')
+    }
+  })
+
+  const updateUserMutation = useMutation(userUpdateHandler, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users')
+    }
+  })
+
+  let content
+  if (isLoading) {
+    return (<p>LOADING...</p>)
   }
-
-  const userAddHandler = async (name, email, role, status, phone) => {
-    const newUser = {
-      name: name,
-      email: email,
-      role: role,
-      status: status,
-      phone: phone,
-      image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-      login: {date: currentDate(), time: currentDateTime()}
-    };
-    try {
-      const res = await Axios.post("https://fake-api-51ea.onrender.com/users", newUser);
-      console.log("User Added");
-      fetchData();
-    } catch (er) {
-      console.log(er);
-    }
-  };
-
-  const userDeleteHandler = async (id) => {
-    const res = await Axios.delete(`https://fake-api-51ea.onrender.com/users/${id}`)
-    try {
-      alert("User deleted")
-      console.log("User deleted");
-      fetchData();
-    } catch (error) {
-      console.log(error)
-    }
-  };
-
-  const userUpdateHandler = async(id, nm, rl) => {
-    const update = {name: nm, role: rl}
-    const res = await Axios.patch(`https://fake-api-51ea.onrender.com/users/${id}`, update);
-    try {
-      alert("User edited")
-      console.log("User deleted");
-      fetchData();
-    } catch (error) {
-      console.log(error)
-    }
+  else if (isError) {
+    return <p>{error.message}</p>
   }
-
+  else if(sort){
+     content=users;
+    let d= sortArrayOfObjects(content);
+      return (
+        <div style={{height:'100vh'}}>
+          <DashboardHeader users={d} addUserMutation={addUserMutation}/>
+          <UsersDisplay users={d} setSort={setsort} Sort={sort} deleteUserMutation={deleteUserMutation} updateUserMutation={updateUserMutation}/>
+        </div>
+      );
+    }
   return (
     <div style={{height:'100vh'}}>
-      <DashboardHeader users={users} userAddHandler={userAddHandler}/>
-      <UsersDisplay users={users} userDeleteHandler={userDeleteHandler} userUpdateHandler={userUpdateHandler}/>
+      <DashboardHeader users={users} addUserMutation={addUserMutation}/>
+      <UsersDisplay users={users} setSort={setsort} Sort={sort} deleteUserMutation={deleteUserMutation} updateUserMutation={updateUserMutation}/>
     </div>
   );
 }

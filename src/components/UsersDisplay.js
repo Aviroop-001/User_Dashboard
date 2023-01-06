@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import SingleUser from "./SingleUser";
 import Pagination from "./Pagination"
 import Users from "./Users";
 
 
-function UsersDisplay({ users,userDeleteHandler, userUpdateHandler }) {
+function UsersDisplay({ users, updateUserMutation, deleteUserMutation, setSort, Sort }) {
    
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(4);
@@ -27,9 +26,9 @@ function UsersDisplay({ users,userDeleteHandler, userUpdateHandler }) {
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                        className="px-6 py-3 text-md font-bold text-left text-gray-500 uppercase "
                       >
-                        Name
+                        <button onClick={() => setSort(!Sort)}><input id="helper-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/></button>  Name
                       </th>
                       <th
                         scope="col"
@@ -59,7 +58,7 @@ function UsersDisplay({ users,userDeleteHandler, userUpdateHandler }) {
                       ></th>
                     </tr>
                   </thead>
-                  <Users currentUsers={currentUsers} userUpdateHandler={userUpdateHandler} userDeleteHandler={userDeleteHandler} />
+                  <Users currentUsers={currentUsers} updateUserMutation={updateUserMutation} deleteUserMutation={deleteUserMutation}/>
                 </table>
                 <Pagination
         usersPerPage={usersPerPage}

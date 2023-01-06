@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import SingleUser from "./SingleUser";
 
-function Users({currentUsers, userUpdateHandler, userDeleteHandler}) {
+function Users({currentUsers, updateUserMutation, deleteUserMutation}) {
 
   return (
       <tbody className="divide-y divide-gray-200">
@@ -9,8 +9,8 @@ function Users({currentUsers, userUpdateHandler, userDeleteHandler}) {
           <SingleUser
             key={user.id}
             user={user}
-            userUpdateHandler={userUpdateHandler}
-            userDeleteHandler={userDeleteHandler}
+            updateUserMutation={updateUserMutation}
+            deleteUserMutation={deleteUserMutation}
           />
         ))}
       </tbody>

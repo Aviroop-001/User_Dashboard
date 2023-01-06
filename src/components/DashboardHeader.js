@@ -11,8 +11,9 @@ import {
   PopoverAnchor, useDisclosure
 } from '@chakra-ui/react'
 import { CSVLink } from "react-csv";
+import { currentDate, currentDateTime } from '../functions';
 
-function DashboardHeader({users, userAddHandler }) {
+function DashboardHeader({users, addUserMutation}) {
 
   const headers=[
     { label: "Name", key: "name" },
@@ -24,13 +25,24 @@ function DashboardHeader({users, userAddHandler }) {
     { label: "City", key: "city" },
   ];
   const data=[];
-  users.forEach(user => {
+  for (let index = 0; index < users.length; index++) {
+    let user = users[index];
     data.push({ name: user.name, username: user.username, email: user.email, phone: user.phone, login: user.login.date, role: user.role, city: user.city? user.city : "REMOTE" })
-  });
+    
+  }
 
   const submitHandler= (e) =>{
     e.preventDefault();
-    userAddHandler(e.target.name.value,e.target.email.value,e.target.role.value,e.target.status.value,e.target.phone.value);
+    const newUser = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      role: e.target.role.value,
+      status: e.target.status.value,
+      phone: e.target.phone.value,
+      image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      login: {date: currentDate(), time: currentDateTime()}
+    };
+    addUserMutation.mutate(newUser);
     e.target.name.value = "";
     e.target.email.value = "";
     e.target.role.value = "";
